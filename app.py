@@ -61,7 +61,7 @@ def detect(user_id):
             file_name = file_name.replace(".png", ".jpg")
         elif file_type == "jpeg":   
             file_name = file_name.replace(".jpeg", ".jpg")
-        local_path = "opt/render/project/src/runs/detect/exp/" + file_name
+        local_path = "/opt/render/project/src/runs/detect/exp/" + file_name
         cloud_path = "images/" + file_name
         storage.child(cloud_path).put(local_path)
         image_uri = storage.child(cloud_path).get_url(None)
@@ -70,7 +70,7 @@ def detect(user_id):
         entry = db.child("detections").child(user_id).push(results_json)
         data_id = entry["name"]
         results_json = { data_id: results_json}
-        shutil.rmtree("opt/render/project/src/runs")
+        shutil.rmtree("/opt/render/project/src/runs")
     final_response = json.dumps(results_json)
     print(final_response)
     return final_response       
@@ -110,8 +110,8 @@ def home():
     return "DurTect API"
 
 def run_server():
-    if os.path.exists("opt/render/project/src/runs") and os.path.isdir("opt/render/project/src/runs"):
-        shutil.rmtree("opt/render/project/src/runs")
+    if os.path.exists("/opt/render/project/src/runs") and os.path.isdir("opt/render/project/src/runs"):
+        shutil.rmtree("/opt/render/project/src/runs")
     app.run(host = "0.0.0.0", port = 5000) 
 
 if __name__ == "__main__":
