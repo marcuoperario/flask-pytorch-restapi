@@ -30,7 +30,7 @@ firebase_config = {
   "serviceAccount": "serviceAccount.json"
 }
 
-# model = torch.hub.load("ultralytics/yolov5", "custom", path = "ML/weights/best.pt", trust_repo=True)
+model = torch.hub.load("ultralytics/yolov5", "custom", path = "ML/weights/best.pt", trust_repo=True)
 firebase = pyrebase.initialize_app(firebase_config)
 auth = firebase.auth()
 db = firebase.database()
@@ -112,7 +112,7 @@ def home():
 def run_server():
     if os.path.exists("opt/render/project/src/runs") and os.path.isdir("opt/render/project/src/runs"):
         shutil.rmtree("opt/render/project/src/runs")
-    app.run(host = "0.0.0.0", port = 5000, debug = True) 
+    app.run(host = "0.0.0.0", port = 5000) 
 
 if __name__ == "__main__":
     run_server()
