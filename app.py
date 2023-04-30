@@ -30,6 +30,12 @@ firebase_config = {
   "serviceAccount": "serviceAccount.json"
 }
 
+model = torch.hub.load("ultralytics/yolov5", "custom", path = "ML/weights/best.pt")
+firebase = pyrebase.initialize_app(firebase_config)
+auth = firebase.auth()
+db = firebase.database()
+storage = firebase.storage()
+
 @app.route("/detect/<string:user_id>", methods = ["POST"])
 def detect(user_id):
     image = request.files["image"]
@@ -103,12 +109,11 @@ def delete_all_logs(user_id):
 def home():
     return "DurTect API"
 
-if __name__ == "__main__":
-    model = torch.hub.load("ultralytics/yolov5", "custom", path = "ML/weights/best.pt")
-    firebase = pyrebase.initialize_app(firebase_config)
-    auth = firebase.auth()
-    db = firebase.database()
-    storage = firebase.storage()
+def run_server():
     if os.path.exists("runs") and os.path.isdir("runs"):
         shutil.rmtree("runs")
     app.run(host = "0.0.0.0", port = 5000, debug = True) 
+
+if __name__ == "__main__":
+    run_server()
+    
