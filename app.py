@@ -110,7 +110,7 @@ def home():
     return "DurTect API"
 
 def run_server():
-    if os.path.exists("/opt/render/project/src/runs") and os.path.isdir("opt/render/project/src/runs"):
+    if os.path.exists("/opt/render/project/src/runs") and os.path.isdir("/opt/render/project/src/runs"):
         shutil.rmtree("/opt/render/project/src/runs")
     app.run(host = "0.0.0.0", port = 5000) 
 
