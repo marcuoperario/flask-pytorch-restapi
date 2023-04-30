@@ -52,5 +52,6 @@ wcwidth==0.2.5
 Werkzeug==2.2.2
 Gunicorn
 python-dotenv
+dotenv
 pyrebase
 pyrebase4
