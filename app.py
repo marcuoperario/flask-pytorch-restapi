@@ -30,7 +30,7 @@ firebase_config = {
   "serviceAccount": "serviceAccount.json"
 }
 
-model = torch.hub.load("ultralytics/yolov5", "custom", path = "ML/weights/best.pt")
+model = torch.hub.load("ultralytics/yolov5", "custom", path = "ML/weights/best.pt", trust_repo=True)
 firebase = pyrebase.initialize_app(firebase_config)
 auth = firebase.auth()
 db = firebase.database()
