@@ -30,7 +30,7 @@ firebase_config = {
   "serviceAccount": "serviceAccount.json"
 }
 
-torch.hub._validate_not_a_forked_repo=lambda a,b,c: True
+torch.hub._validate_not_a_forked_repo = lambda a,b,c: True
 model = torch.hub.load("ultralytics/yolov5", "custom", path = "/opt/render/project/src/ML/weights/best.pt", trust_repo=True)
 firebase = pyrebase.initialize_app(firebase_config)
 auth = firebase.auth()
@@ -39,6 +39,7 @@ storage = firebase.storage()
 
 @app.route("/detect/<string:user_id>", methods = ["POST"])
 def detect(user_id):
+    delete_image_directory()
     image = request.files["image"]
     timestamp = request.form.get("timestamp")
     file_name = image.filename
@@ -71,7 +72,7 @@ def detect(user_id):
         entry = db.child("detections").child(user_id).push(results_json)
         data_id = entry["name"]
         results_json = { data_id: results_json}
-        shutil.rmtree("/opt/render/project/src/runs")
+        delete_image_directory()
     final_response = json.dumps(results_json)
     print(final_response)
     return final_response       
@@ -111,9 +112,13 @@ def home():
     return "DurTect API"
 
 def run_server():
+    delete_image_directory()
+    app.run(host = "0.0.0.0", port = 5000) 
+
+
+def delete_image_directory():
     if os.path.exists("/opt/render/project/src/runs") and os.path.isdir("/opt/render/project/src/runs"):
         shutil.rmtree("/opt/render/project/src/runs")
-    app.run(host = "0.0.0.0", port = 5000) 
 
 if __name__ == "__main__":
     run_server()
