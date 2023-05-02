@@ -5,6 +5,7 @@ import shutil
 import json
 from dotenv import load_dotenv
 import pyrebase
+from PIL import Image
 
 app = Flask(__name__)
 
@@ -45,7 +46,9 @@ def detect(user_id):
     file_name = image.filename
     file_type = file_name.split(".")[1]
     image.save(file_name)
-    detect = model(file_name)
+    final_image = Image.open(file_name)
+    final_image.save("resized_" + file_name, quality = 65, optimize = True)
+    detect = model("resized_" + file_name)
     print(detect)
     results = detect.pandas().xyxy[0].to_json()
     print(results)
@@ -63,7 +66,7 @@ def detect(user_id):
             file_name = file_name.replace(".png", ".jpg")
         elif file_type == "jpeg":   
             file_name = file_name.replace(".jpeg", ".jpg")
-        local_path = "/opt/render/project/src/runs/detect/exp/" + file_name
+        local_path = "/opt/render/project/src/runs/detect/exp/" + "resized_" + file_name
         cloud_path = "images/" + file_name
         storage.child(cloud_path).put(local_path)
         image_uri = storage.child(cloud_path).get_url(None)
