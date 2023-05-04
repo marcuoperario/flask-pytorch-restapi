@@ -28,7 +28,7 @@ firebase_config = {
   "messagingSenderId": FIREBASE_MESSENGER_SENDER_ID,
   "appId": FIREBASE_APP_ID,
   "measurementId": FIREBASE_MEASUREMENT_ID,
-  "serviceAccount": "/opt/render/project/src//etc/secrets/serviceAccount.json"
+  "serviceAccount": "/opt/render/project/src/etc/secrets/serviceAccount.json"
 }
 
 torch.hub._validate_not_a_forked_repo = lambda a,b,c: True
