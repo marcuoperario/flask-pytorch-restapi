@@ -1,4 +1,4 @@
-from flask import Flask, request, send_file
+from flask import Flask, request
 import torch
 import os 
 import shutil
@@ -28,7 +28,7 @@ firebase_config = {
   "messagingSenderId": FIREBASE_MESSENGER_SENDER_ID,
   "appId": FIREBASE_APP_ID,
   "measurementId": FIREBASE_MEASUREMENT_ID,
-  "serviceAccount": "serviceAccount.json"
+  "serviceAccount": "/opt/render/project/src//etc/secrets/serviceAccount.json"
 }
 
 torch.hub._validate_not_a_forked_repo = lambda a,b,c: True
@@ -60,6 +60,7 @@ def detect(user_id):
         results_json["status"] = "null"
         results_json["image_uri"] = "null"
         results_json = { "something": results_json }
+        os.remove("/opt/render/project/src/resized_" + file_name)
     else:
         detect.save()
         if file_type == "png":
@@ -76,6 +77,7 @@ def detect(user_id):
         data_id = entry["name"]
         results_json = { data_id: results_json}
         delete_image_directory()
+        os.remove("/opt/render/project/src/resized_" + file_name.replace(".jpg", "." + file_type))
     final_response = json.dumps(results_json)
     print(final_response)
     return final_response       
@@ -116,7 +118,7 @@ def home():
 
 def run_server():
     delete_image_directory()
-    app.run(host = "0.0.0.0", port = 5000) 
+    app.run(host = "0.0.0.0", port = 5000, debug = True) 
 
 
 def delete_image_directory():
