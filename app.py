@@ -28,11 +28,11 @@ firebase_config = {
   "messagingSenderId": FIREBASE_MESSENGER_SENDER_ID,
   "appId": FIREBASE_APP_ID,
   "measurementId": FIREBASE_MEASUREMENT_ID,
-  "serviceAccount": "/etc/secrets/serviceAccount.json"
+  "serviceAccount": "serviceAccount.json"
 }
 
 torch.hub._validate_not_a_forked_repo = lambda a,b,c: True
-model = torch.hub.load("ultralytics/yolov5", "custom", path = "/opt/render/project/src/ML/weights/best.pt", trust_repo=True)
+model = torch.hub.load("ultralytics/yolov5", "custom", path = "ML/weights/best.pt", trust_repo=True)
 firebase = pyrebase.initialize_app(firebase_config)
 auth = firebase.auth()
 db = firebase.database()
@@ -60,14 +60,14 @@ def detect(user_id):
         results_json["status"] = "null"
         results_json["image_uri"] = "null"
         results_json = { "something": results_json }
-        os.remove("/opt/render/project/src/resized_" + file_name)
+        os.remove("resized_" + file_name)
     else:
         detect.save()
         if file_type == "png":
             file_name = file_name.replace(".png", ".jpg")
         elif file_type == "jpeg":   
             file_name = file_name.replace(".jpeg", ".jpg")
-        local_path = "/opt/render/project/src/runs/detect/exp/" + "resized_" + file_name
+        local_path = "runs/detect/exp/" + "resized_" + file_name
         cloud_path = "images/" + file_name
         storage.child(cloud_path).put(local_path)
         image_uri = storage.child(cloud_path).get_url(None)
@@ -77,7 +77,7 @@ def detect(user_id):
         data_id = entry["name"]
         results_json = { data_id: results_json}
         delete_image_directory()
-        os.remove("/opt/render/project/src/resized_" + file_name.replace(".jpg", "." + file_type))
+        os.remove("resized_" + file_name.replace(".jpg", "." + file_type))
     final_response = json.dumps(results_json)
     print(final_response)
     return final_response       
@@ -122,8 +122,8 @@ def run_server():
 
 
 def delete_image_directory():
-    if os.path.exists("/opt/render/project/src/runs") and os.path.isdir("/opt/render/project/src/runs"):
-        shutil.rmtree("/opt/render/project/src/runs")
+    if os.path.exists("runs") and os.path.isdir("runs"):
+        shutil.rmtree("runs")
 
 if __name__ == "__main__":
     run_server()
